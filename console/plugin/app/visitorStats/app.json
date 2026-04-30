@@ -1,0 +1,11 @@
+{
+  "name": "访客画像",
+  "desc": "记录访客IP地址、地区、设备信息，统计分析访客数据",
+  "logo": "img/logo.png",
+  "entry": "visitorStats",
+  "version": "1.0.0",
+  "author": "",
+  "website": "",
+  "install": 1,
+  "allow": false
+}

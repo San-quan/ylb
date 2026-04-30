@@ -1,0 +1,13 @@
+{
+    "name": "对话式落地页",
+    "desc": "创建对话式自动回复h5落地页单页",
+    "logo": "img/logo.png",
+    "entry": "h5chatPages",
+    "version": "1.0.0",
+    "author": "",
+    "website": "",
+    "install": 2,
+    "install_time": "2025-09-29 21:58:02",
+    "current_status": "已安装",
+    "allow": false
+}

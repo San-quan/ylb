@@ -1,0 +1,29 @@
+/* 二维码生成器样式 */
+.plugin-container {
+    padding: 20px;
+}
+
+.qr-preview {
+    background: #fff;
+    border-radius: 8px;
+    padding: 20px;
+    min-height: 300px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.color-picker-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.form-range {
+    cursor: pointer;
+}
+
+#qrPreview canvas {
+    max-width: 100%;
+    height: auto !important;
+}

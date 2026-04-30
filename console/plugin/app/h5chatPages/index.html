@@ -1,0 +1,1141 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../../../../static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../static/css/ylb.css">
+	<link rel="shortcut icon" href="../../../../static/img/logo.png">
+	<link rel="stylesheet" href="app.css">
+	<script type="text/javascript" src="../../../../static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/popper.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/qrcode.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/clipboard.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/getNavList.js"></script>
+	<script type="text/javascript" src="../../../../static/js/notification.js"></script>
+	<script type="text/javascript" src="./app.js"></script>
+	<style>
+        .question-group { 
+            border: 1px solid rgba(59,94,225, 0.5);
+            padding: 10px;
+            margin-bottom: 10px;
+            border-radius: 8px;
+        }
+        label {
+            font-size: 15px;
+            color: #555;
+        }
+        .question-text {
+            width: 100%;
+            height: 35px;
+            border: 1px solid #ccc;
+            outline: none;
+            text-indent: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #555;
+        }
+        .add-option {
+            padding: 5px 10px;
+            color: rgb(59,94,225);
+            background: rgba(59,94,225,0.1);
+            padding: 4px 9px;
+            outline: none;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: 0.1s;
+        }
+        .add-option:hover {
+            color: #fff;
+            background: rgb(59,94,225);
+            transition: 0.1s;
+        }
+        .options-container {
+            margin-top: 10px;
+            border-top: 1px solid #eee;
+            padding: 15px 0;
+        }
+        .option {
+            display: flex;
+        }
+        .option label {
+            line-height: 35px;
+        }
+        .option-text {
+            flex: 0.5;
+            height: 35px;
+            border: 1px solid #ccc;
+            outline: none;
+            text-indent: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #555;
+            margin-right: 10px;
+        }
+        .response-type {
+            height: 35px;
+            border: 1px solid #ccc;
+            outline: none;
+            border-radius: 8px;
+            padding: 0 5px;
+            font-size: 15px;
+            color: #555;
+            margin-right: 10px;
+        }
+        .response-content {
+            flex: 1;
+            height: 35px;
+            border: 1px solid #ccc;
+            outline: none;
+            text-indent: 10px;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #555;
+        }
+        .remove-option {
+            color: #666;
+            font-size: 14px;
+            cursor: pointer;
+            padding: 0 5px;
+            line-height: 35px;
+        }
+        .remove-question {
+            color: #f00;
+            font-size: 14px;
+            cursor: pointer;
+            float: right;
+        }
+        .next-question-select {
+            height: 35px;
+            border: 1px solid #ccc;
+            outline: none;
+            border-radius: 8px;
+            padding: 0 5px;
+            font-size: 15px;
+            color: #555;
+            margin-right: 10px;
+        }
+        .nolinks {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            display: none;
+        }
+        .link_card {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            max-width: 100%; 
+            flex-wrap: wrap;
+            margin-bottom: 10px;
+        }
+        .link {
+            flex: 1;
+            word-break: break-all;
+            overflow-wrap: break-word;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .number-span {
+            white-space: nowrap;
+            margin: 0 25px;
+            font-size: 15px;
+        }
+        .num-tag {
+            background: #f1f1f1;
+            color: #999;
+            border-radius: 10px;
+            padding: 4px 8px;
+        }
+        .editYz {
+            cursor: pointer;
+        }
+        .delete {
+            color: rgb(59,94,225);
+            cursor: pointer;
+            font-size: 15px;
+        }
+        .up-button {
+            margin-left:10px;
+            width:150px;
+        }
+        .kf-qrcode-view {
+            width: 120px;
+            margin: 10px auto 0;
+            cursor: pointer;
+        }
+        .up-title {
+            text-align: center;
+            font-size: 15px;
+            color: #666;
+            display: block;
+            margin: 20px auto 0;
+        }
+        .re-upload-span {
+            color: rgb(59,94,225);
+            cursor: pointer;
+        }
+        .count-border-right {
+            border-right: 1px solid #ddd;
+            padding-right: 10px;
+        }
+        .data-p {
+            text-align: center;
+            font-size: 14px;
+            color: #999;
+            display: block;
+            margin: 20px auto 0;
+        }
+        .kf-qrcode-view .qrcode-div {
+            width: 120px;
+            height: 120px;
+            background: #f5f5f5;
+            text-align: center;
+            line-height: 120px;
+            font-size: 22px;
+            color: #999;
+            border-radius: 15px;
+            border: 2px dashed #ccc;
+        }
+        .preview-qrcode {
+            width: 160px;
+            margin: 10px auto 0;
+            display: none;
+        }
+        .preview-qrcode img {
+            width: 160px;
+            box-shadow: 0 0 5px #eee;
+        }
+    </style>
+</head>
+<body>
+    
+    <div id="app">
+    	
+    	<!-- 左侧 -->
+    	<div class="left">
+    		<div class="dhview">
+    
+    			<!-- LOGO -->
+    			<a href="../../../index/" class="index">
+    			    <div class="logo"></div>
+    			</a>
+    
+    			<!-- 导航 -->
+			    <ul>
+			    <a href="../../../index/" >
+			    <li class="nav-li">
+			        <i class="icon i-data"></i>
+			        <span class="nav-text">数据</span>
+			    </li>
+			    </a>
+			    
+			    <a href="../../../qun/">
+			    <li class="nav-li">
+			        <i class="icon i-hm"></i>
+			        <span class="nav-text">活码</span>
+			    </li>
+			    </a>
+			    
+				<a href="../../../dwz/">
+				<li class="nav-li">
+				    <i class="icon i-dwz"></i>
+				    <span class="nav-text">短网址</span>
+				</li>
+				</a>
+				
+				<a href="../../../tbk/">
+				<li class="nav-li">
+				    <i class="icon i-tbk"></i>
+				    <span class="nav-text">淘宝客</span>
+				</li>
+				</a>
+				
+				<a href="../../../shareCard/">
+				<li class="nav-li">
+				    <i class="icon i-share"></i>
+				    <span class="nav-text">分享卡片</span>
+				</li>
+				</a>
+				
+				<a href="../../../plugin/" class="selected">
+				<li class="nav-li">
+				    <i class="icon i-plugin-dark"></i>
+				    <span class="nav-text">插件中心</span>
+				</li>
+				</a>
+				
+				<a href="../../../kami/">
+				<li class="nav-li">
+				    <i class="icon i-kami"></i>
+				    <span class="nav-text">卡密分发</span>
+				</li>
+				</a>
+				
+				<a href="../../../config/">
+				<li class="nav-li">
+				    <i class="icon i-config"></i>
+				    <span class="nav-text">配置中心</span>
+				</li>
+				</a>
+				
+				<a href="../../../sucai/">
+				<li class="nav-li">
+				    <i class="icon i-sucai"></i>
+				    <span class="nav-text">素材管理</span>
+				</li>
+				</a>
+				
+				<a href="../../../user/">
+				<li class="nav-li">
+				    <i class="icon i-account"></i>
+				    <span class="nav-text">账号管理</span>
+			    </li>
+			    </a>
+			</ul>
+    
+    		<!-- 账号 -->
+    		<div class="account">加载中...</div>
+    		    
+    		</div>
+    	</div>
+    
+    	<!-- 右侧 -->
+    	<div id="right">
+    	    
+    	    <!--面板标题-->
+    		<h3>
+    		    <a href="./" class="mianbaoxie_a">插件中心</a> ➜ <span class="mbx">对话式落地页</span> 
+		    </h3>
+		    
+		    <!--数据区域-->
+    		<div class="data-card">
+    		    
+    			<!-- 按钮区域 -->
+    			<div class="button-view" id="button-view" style="display:none;">
+    			    
+    				<!--flex布局按钮容器-->
+    			    <div class="flex-button-view">
+    			        
+    			        
+        			    <!--导航-->
+        			    <div class="button-daohang">
+        			        <!--返回按钮-->
+            			    <a href="../../">
+            			        <div class="back-lastpage"></div>
+            			    </a>
+        			        <button class="default-btn">落地页管理</button>
+        			    </div>
+        			    
+        			    <!--功能-->
+        			    <div class="button-gongneng">
+        			        
+        			        <button class="tint-btn" 
+            				data-toggle="modal" 
+            				data-target="#createJwModal" 
+            				onclick="getDomainNameList('create')" style="margin-left:5px;">创建落地页</button>
+        			    </div>
+    			    </div><!-- flex-button-view -->
+    			</div>
+    
+    			<!-- 列表区域 -->
+    			<div class="data-list">
+    			    
+    				<table class="table">
+    				    <thead></thead>
+    				    <tbody></tbody>
+    				</table>
+    			</div><!-- data-list -->
+    			
+    			<p class="loading" style="display: none;"></p>
+    			
+    			<!-- 分页 -->
+    			<div class="fenye"></div>
+    			
+    		</div><!-- data-card -->
+    	</div><!-- right -->
+    
+    	<!-- 创建落地页 -->
+        <div class="modal fade" id="createJwModal">
+            
+            <div class="modal-dialog" style="max-width:1000px;">
+                <div class="modal-content">
+                    
+                        <!-- 头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">创建落地页</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- 表单 -->
+                        <div class="modal-body">
+                            <form id="createJw" enctype="multipart/form-data">
+                            
+                            <!--标题\访问限制\到期时间-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">页面标题</span>
+                                    <input type="text" name="page_title" class="form-control" autocomplete="off" placeholder="落地页的标题">
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">访问限制</span>
+                                    <select name="limitation" class="form-control" title="">
+                                        <option value="1">不限制</option>
+                                        <option value="2">只允许在手机打开</option>
+                                        <option value="3">只允许在微信内打开</option>
+                                        <option value="4">只允许在QQ内打开</option>
+                                        <option value="5">只允许在抖音内打开</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;margin-left:10px;" title="想一直不过期就把年份设置久一些">
+                                    <span class="text">到期时间</span>
+                                    <input type="datetime-local" class="form-control" name="page_expire_time" id="page_expire_time_picker">
+                                </div>
+                            </div>
+                            
+                            <!--基础配置-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">顶部banner图</span>
+                                    <div class="upload-input" title="对话页面顶部的图片">
+                                        <input type="text" name="page_banner" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','createJwModal','banner');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">客户头像</span>
+                                    <div class="upload-input" title="客户发送消息给我时使用的头像">
+                                        <input type="text" name="customer_avatar" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','createJwModal','customer');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">我的头像</span>
+                                    <div class="upload-input" title="我回复客户消息时使用的头像">
+                                        <input type="text" name="my_avatar" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','createJwModal','my');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--域名-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">短链域名</span>
+                                    <div class="upload-input" title="短网址使用的域名">
+                                        <select class="form-control" name="page_dlym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">入口域名</span>
+                                    <div class="upload-input" title="点击短网址将会跳转到这个域名">
+                                        <select class="form-control" name="page_rkym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">落地域名</span>
+                                    <div class="upload-input" title="落地页使用这个域名">
+                                        <select class="form-control" name="page_ldym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--预设回复内容-->
+                            <div style="width:100%;margin:0 auto 10px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">欢迎语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" rows="4" name="welcome_msg" placeholder="进入页面自动回复给客户的" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">结束语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" rows="4" name="end_msg" placeholder="对话结束后回复给客户的" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">拒绝语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" rows="4" name="reject_msg" placeholder="客户拒绝了某项内容弹出这句话" style="resize: none;"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--底部跳转按钮-->
+                            <div style="width:100%;height:70px;margin:0 auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">按钮文字</span>
+                                    <div class="upload-input" title="">
+                                        <input type="text" name="jump_btn_text" class="form-control" placeholder="底部大按钮的文字" list="jump_btn_text_options" autocomplete="off" />
+                                        <datalist id="jump_btn_text_options">
+                                            <option value="点击添加微信"></option>
+                                            <option value="点击咨询"></option>
+                                            <option value="点击联系"></option>
+                                        </datalist>
+                                    </div>
+                                </div>
+                                <div style="width:120px;margin-left:10px;">
+                                    <span class="text">按钮背景颜色</span>
+                                    <div class="upload-input" title="">
+                                        <input type="color" name="jump_btn_bg_color" value="#00d600" class="form-control" />
+                                    </div>
+                                </div>
+                                <div style="width:120px;margin-left:10px;">
+                                    <span class="text">按钮圆角边框</span>
+                                    <div class="upload-input" title="">
+                                        <select name="jump_btn_border_radius" class="form-control" title="">
+                                        <option value="5px">5px</option>
+                                        <option value="10px">10px</option>
+                                        <option value="15px">15px</option>
+                                        <option value="20px">20px</option>
+                                        <option value="25px">25px</option>
+                                        <option value="30px">30px</option>
+                                        <option value="35px">35px</option>
+                                        <option value="40px">40px</option>
+                                        <option value="50px">50px</option>
+                                        <option value="60px">60px</option>
+                                        <option value="70px">70px</option>
+                                        <option value="80px">80px</option>
+                                        <option value="90px">90px</option>
+                                        <option value="100px">100px</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div style="width:120px;margin-left:10px;">
+                                    <span class="text">按钮动画频率</span>
+                                    <div class="upload-input" title="">
+                                        <select name="jump_btn_animation" class="form-control" title="">
+                                        <option value="1">高频动画</option>
+                                        <option value="2">中频动画</option>
+                                        <option value="3">低频动画</option>
+                                        <option value="4">无动画</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div style="width:180px;margin-left:10px;">
+                                    <span class="text">跳转链接模式</span>
+                                    <div class="upload-input" title="">
+                                    <select name="targetlink_mode" class="form-control" title="">
+                                        <option value="1">随机切换跳转链接</option>
+                                        <option value="2">根据阈值切换链接</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </form>
+                        </div><!-- modal-body -->
+                        
+                        <!-- 底部操作 -->
+                        <div class="modal-footer">
+                            <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="button" class="default-btn" onclick="createJw();">立即创建</button>
+                            </div>
+                        </div>
+                        
+                    </div><!-- modal-footer -->
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- createJwModal -->
+      	
+      	<!-- 编辑落地页 -->
+        <div class="modal fade" id="editJwModal">
+            
+            <div class="modal-dialog" style="max-width:1000px;">
+                <div class="modal-content">
+                    
+                        <!-- 头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">编辑落地页</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- 表单 -->
+                        <div class="modal-body">
+                            <form id="editJw" enctype="multipart/form-data">
+                            
+                            <!--标题\访问限制\到期时间-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">页面标题</span>
+                                    <input type="text" name="page_title" class="form-control" autocomplete="off" placeholder="落地页的标题">
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">访问限制</span>
+                                    <select name="limitation" class="form-control" title="">
+                                        <option value="1">不限制</option>
+                                        <option value="2">只允许在手机打开</option>
+                                        <option value="3">只允许在微信内打开</option>
+                                        <option value="4">只允许在QQ内打开</option>
+                                        <option value="5">只允许在抖音内打开</option>
+                                    </select>
+                                </div>
+                                <div style="flex:1;margin-left:10px;" title="想一直不过期就把年份设置久一些">
+                                    <span class="text">到期时间</span>
+                                    <input type="datetime-local" class="form-control" name="page_expire_time" id="page_expire_time_picker">
+                                </div>
+                            </div>
+                            
+                            <!--基础配置-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">顶部banner图</span>
+                                    <div class="upload-input" title="对话页面顶部的图片">
+                                        <input type="text" name="page_banner" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','editJwModal','banner');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">客户头像</span>
+                                    <div class="upload-input" title="客户发送消息给我时使用的头像">
+                                        <input type="text" name="customer_avatar" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','editJwModal','customer');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">我的头像</span>
+                                    <div class="upload-input" title="我回复客户消息时使用的头像">
+                                        <input type="text" name="my_avatar" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                        <span class="input-group-text">
+                                            <span id="chooseIMG" onclick="getSuCai('1','editJwModal','my');">上传</span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--域名-->
+                            <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">短链域名</span>
+                                    <div class="upload-input" title="短网址使用的域名">
+                                        <select class="form-control" name="page_dlym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">入口域名</span>
+                                    <div class="upload-input" title="点击短网址将会跳转到这个域名">
+                                        <select class="form-control" name="page_rkym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">落地域名</span>
+                                    <div class="upload-input" title="落地页使用这个域名">
+                                        <select class="form-control" name="page_ldym">
+                                            
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--预设回复内容-->
+                            <div style="width:100%;margin:0 auto 10px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">欢迎语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" name="welcome_msg" placeholder="进入页面自动回复给客户的"></textarea>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">结束语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" name="end_msg" placeholder="对话结束后回复给客户的"></textarea>
+                                    </div>
+                                </div>
+                                <div style="flex:1;margin-left:10px;">
+                                    <span class="text">拒绝语</span>
+                                    <div class="upload-input" title="">
+                                        <textarea class="form-control" name="reject_msg" placeholder="客户拒绝了某项内容弹出这句话"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--底部跳转按钮-->
+                            <div style="width:100%;height:70px;margin:0 auto 20px;display:flex;">
+                                <div style="flex:1;">
+                                    <span class="text">按钮文字</span>
+                                    <div class="upload-input" title="">
+                                        <input type="text" name="jump_btn_text" class="form-control" placeholder="底部大按钮的文字" />
+                                    </div>
+                                </div>
+                                <div style="width:150px;margin-left:10px;">
+                                    <span class="text">按钮背景颜色</span>
+                                    <div class="upload-input" title="">
+                                        <input type="color" name="jump_btn_bg_color" value="#00ff00" class="form-control" />
+                                    </div>
+                                </div>
+                                <div style="width:150px;margin-left:10px;">
+                                    <span class="text">按钮圆角边框</span>
+                                    <div class="upload-input" title="">
+                                        <select name="jump_btn_border_radius" class="form-control" title="">
+                                        <option value="5px">5px</option>
+                                        <option value="10px">10px</option>
+                                        <option value="15px">15px</option>
+                                        <option value="20px">20px</option>
+                                        <option value="25px">25px</option>
+                                        <option value="30px">30px</option>
+                                        <option value="35px">35px</option>
+                                        <option value="40px">40px</option>
+                                        <option value="50px">50px</option>
+                                        <option value="60px">60px</option>
+                                        <option value="70px">70px</option>
+                                        <option value="80px">80px</option>
+                                        <option value="90px">90px</option>
+                                        <option value="100px">100px</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div style="width:150px;margin-left:10px;">
+                                    <span class="text">按钮动画频率</span>
+                                    <div class="upload-input" title="">
+                                    <select name="jump_btn_animation" class="form-control" title="">
+                                        <option value="1">高频动画</option>
+                                        <option value="2">中频动画</option>
+                                        <option value="3">低频动画</option>
+                                        <option value="4">无动画</option>
+                                    </select>
+                                    </div>
+                                </div>
+                                <div style="width:180px;margin-left:10px;">
+                                    <span class="text">跳转链接模式</span>
+                                    <div class="upload-input" title="">
+                                    <select name="targetlink_mode" class="form-control" title="">
+                                        <option value="1">随机切换跳转链接</option>
+                                        <option value="2">根据阈值切换链接</option>
+                                    </select>
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <!--id-->
+                            <input type="hidden" name="page_id" />
+                            
+                            </form>
+                        </div><!-- modal-body -->
+                        
+                        <!-- 底部操作 -->
+                        <div class="modal-footer">
+                            <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="button" class="default-btn" onclick="editJw();">立即保存</button>
+                            </div>
+                        </div>
+                        
+                    </div><!-- modal-footer -->
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- editJwModal -->
+        
+        <!-- 跳转目标链接 -->
+        <div class="modal fade" id="targetLinksModal">
+            
+            <div class="modal-dialog" style="max-width:700px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">跳转目标链接</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        <div style="display:flex;">
+                            <div style="flex:1;">
+                                <form id="addTargetLink">
+                                <input type="text" name="targetlink" class="form-control" autocomplete="off" placeholder="http://或https://或weixin://" />
+                            </div>
+                            <div style="width:200px;margin-left:5px;" title="随机模式就不用填写阈值">
+                                <input type="text" name="yz" class="form-control" autocomplete="off" placeholder="阈值（随机模式无需填）" />
+                                <input type="hidden" name="page_id" />
+                                <input type="hidden" name="mode" />
+                                </form>
+                            </div>
+                            <div style="width:120px;margin-left:15px;">
+                                <button type="button" class="default-btn" onclick="addTargetLink()" style="width:120px;float:right;">添加链接</button>
+                            </div>
+                        </div>
+                        <br>
+                        
+                        <!--链接列表-->
+                        <div class="link_list">
+                            <p class="nolinks"></p>
+                            <div class="card-list"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- targetLinksModal -->
+      	
+      	<!-- 删除确认 -->
+        <div class="modal fade" id="delJwModal">
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">删除落地页</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        将会删除该落地页以及其所有目标跳转链接！删除后无法恢复！
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- delJwModal -->
+        
+        <!-- 分享落地页 -->
+        <div class="modal fade" id="sharePageModal">
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">分享落地页</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 表单 -->
+                    <div class="modal-body">
+                        <div class="box">
+                            <div class="shortUrl">
+                                <span class="text">短链接：</span><span id="shortUrl"></span>
+                            </div>
+                            <br>
+                            <div class="longUrl">
+                                <span class="text">长链接：</span><span id="longUrl"></span>
+                            </div>
+                            <div class="Qrcode" id="shareQrcode"></div>
+                            <p style="text-align:center;font-size:15px;color:#999;">
+                                请使用微信、QQ、抖音、浏览器等平台扫码查看
+                            </p>
+                        </div>
+                    </div><!-- modal-body -->
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- sharePageModal -->
+        
+        <!-- 编辑对话 -->
+        <div class="modal fade" id="editChatMsgModal">
+        
+            <div class="modal-dialog" style="max-width:1000px;">
+                <div class="modal-content">
+        
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">编辑对话</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+        
+                    <!-- 表单 -->
+                    <form id="editChatMsg">
+                    <div class="modal-body">
+                        <div class="AddchatMsg">
+                            <button type="button" class="tint-btn" id="add-question">添加问题</button>
+                            <br/><br/>
+                            <div id="questions-container"></div>
+                            <input type="hidden" name="page_id" />
+                            <input type="hidden" name="chatData" />
+                        </div>
+                    </div>
+        
+                    <!-- 底部操作 -->
+                    <div class="modal-footer">
+                        <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="submit" class="default-btn"><span class="saveChatData_btn_text">保存对话数据</span></button>
+                            </div>
+                        </div>
+                    </div><!-- modal-footer -->
+                    </form>
+        
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+        
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- editChatMsgModal -->
+        
+        <!-- 客服小程序管理 -->
+        <div class="modal fade" id="qywxKfXcxModal">
+            
+            <div class="modal-dialog" style="max-width:600px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">客服小程序管理</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        
+                        <form id="qywxKfXcx" enctype="multipart/form-data">
+
+                        <div style="width:100%;height:70px;margin:0 auto 25px;display:flex;">
+                            <div style="flex:1;margin-right:10px;">
+                                <span class="text">小程序Appid</span>
+                                <input type="input" name="appid" class="form-control" placeholder="粘贴你的小程序Appid" />
+                            </div>
+                            <div style="flex:1;">
+                                <span class="text">首页海报图点击跳转链接（可空）</span>
+                                <input type="input" name="bannerClickUrl" class="form-control" placeholder="只支持小程序后台配置的Web-view业务域名" />
+                            </div>
+                        </div>
+                        
+                        <div style="width:100%;height:70px;margin:0 auto 25px;display:flex;">
+                            <div style="flex:1;margin-right:10px;">
+                                <span class="text">首页海报图</span>
+                                <div class="upload-input" style="display:flex;height:36.5px;">
+                                    <input type="input" name="banner" class="form-control" placeholder="上传图片或粘贴图片地址" />
+                                    <button type="button" class="tint-btn up-button" onclick="getSuCai('1','qywxKfXcxModal','banner');">
+                                        <span class="banner-up-text">上传图片</span>
+                                    </button>
+                                </div>
+                            </div>
+                            <div style="flex:1;">
+                                <span class="text">客服页卡片背景图</span>
+                                <div class="upload-input" style="display:flex;height:36.5px;">
+                                    <input type="input" name="kfQrBgimg" class="form-control" placeholder="上传图片或粘贴图片地址" />
+                                    <button type="button" class="tint-btn up-button" onclick="getSuCai('1','qywxKfXcxModal','kfQrBgimg');">
+                                        <span class="banner-up-text">上传图片</span>
+                                    </button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <span class="text">首页服务介绍文案</span>
+                        <textarea name="service_content" rows="3" class="form-control" placeholder="输入介绍文案"></textarea>
+                        
+                        <!--客服二维码-->
+                        <p class="up-title">
+                            <span>上传客服二维码</span>
+                        </p>
+                        <div class="kf-qrcode-view">
+                            <div class="qrcode-div" onclick="getSuCai('1','qywxKfXcxModal','kfQrUrl');">+</div>
+                        </div>
+                        <div class="preview-qrcode"></div>
+                        <p class="data-p">
+                            <span>
+                                <span class="count-border-right">首页海报点击：<span class="bannerClickNum"></span></span>
+                                <span class="count-border-right">客服页面访问：<span class="kfQrPagePv"></span></span>
+                                <span class="count-border-right">客服按钮点击：<span class="KfQrBtnClickCount"></span></span>
+                            </span>
+                            <span class="re-upload-span" onclick="resetKfData();">重置</span>
+                        </p>
+                        <input type="hidden" name="kfQrUrl" />
+                        </form>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer">
+                        <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="#" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="submit" class="default-btn" onclick="setQywxKfXcxConfig()">保存配置</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- qywxKfXcxModal -->
+        
+        <!--素材库-->
+        <div class="modal fade" id="suCaiKu">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header" title="点击右上角&times;可返回二维码列表">
+                        <h4 class="modal-title">素材库</h4>
+                        <span class="hideSuCaiPannel_closeIcon"></span>
+                    </div>
+                    
+                    <!-- 模态框主体 -->
+                    <div class="modal-body">
+                        <div class="sucai-upload">
+                            <button type="button" class="default-btn upload_sucai_button">
+                                <span>上传素材</span>
+                                <form id="uploadTosuCaiKuForm" enctype="multipart/form-data">
+                                    <input type="file" name="file" class="upload_sucai" accept="image/*" id="uploadTosuCaiKu" />
+                                    <input text="text" name="upload_sucai_fromPannel" style="display:none;" />
+                                    <input text="text" name="upload_sucai_fromINput" style="display:none;" />
+                                </form>
+                            </button>
+                        </div>
+                        
+                        <!--素材容器-->
+                        <div class="sucai-view"></div>
+                        
+                        <!--分页-->
+                        <div class="fenye"></div>
+                    </div>
+                    
+                    <!-- 模态框底部 -->
+                    <div class="modal-footer">
+                        <div class="footer-btn">
+                        	<div class="faqnav" title="阅读使用指南">
+                        	    <span class="faq"><a href="https://viusosibp88.feishu.cn/docx/TOa4dHdxToi9OWxvcHXcNnxNntf" target="_blank">?</a></span>
+                        	</div>
+                        	<div class="btnnav">
+                        	    <button type="button" class="default-btn" data-dismiss="modal" onclick="hideSuCaiPannel()">取消</button>
+                        	</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div>
+            </div>
+        </div><!-- suCaiKu -->
+    </div><!-- app -->
+    
+    <script>
+        
+        // 上传至素材库
+        $("#uploadTosuCaiKu").change(function(e){
+            
+            // 获取选择的文件
+            var fileSelect = e.target.files;
+            if(fileSelect.length>0){
+                
+                // file表单数据
+                var imageData = new FormData(document.getElementById("uploadTosuCaiKuForm"));
+                
+                // 获取 fromPannel
+                var fromPannel = $('#suCaiKu input[name="upload_sucai_fromPannel"]').val();
+                
+                // 获取 fromINput
+                var fromINput = $('#suCaiKu input[name="upload_sucai_fromINput"]').val();
+                
+                // 异步上传
+                $.ajax({
+                    url:"../../../public/uploadToSuCaiKu.php",
+                    type:"POST",
+                    data:imageData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        
+                        if(res.code == 200){
+                            
+                            // 上传成功
+                            // 重新获取素材列表
+                            getSuCai(1,fromPannel,fromINput);
+                        }else{
+                            
+                            // 上传失败
+                            showErrorResult(res.msg)
+                        }
+                        
+                        // 清空file控件的选择
+                        $('#uploadTosuCaiKu').val('');
+                    },
+                    error: function() {
+                        
+                        // 上传失败
+                        alert('上传至素材库失败！')
+                    }
+                })
+            }
+        })
+        
+        // 重新上传客服二维码
+        function reUploadKfQrcode() {
+            
+            // 成功渲染DOM
+            $('.up-title').html(`
+                <span>上传客服二维码</span>
+            `);
+            $('.kf-qrcode-view').css('display','block');
+            $('.preview-qrcode').css('display','none');
+            $('.preview-qrcode').html('');
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<title></title>
+	<meta charset="utf-8">
+	<link rel="stylesheet" href="../../../../static/css/bootstrap.min.css">
+	<link rel="stylesheet" href="../../../../static/css/ylb.css">
+	<link rel="shortcut icon" href="../../../../static/img/logo.png">
+	<script type="text/javascript" src="../../../../static/js/jquery.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/popper.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/bootstrap.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/qrcode.min.js"></script>
+	<script type="text/javascript" src="../../../../static/js/clipboard.min.js"></script>
+	<script type="text/javascript">
+        var timestamp = new Date().getTime();
+        var script = document.createElement('script');
+        script.type = 'text/javascript';
+        script.src = './app.js?v=' + timestamp;
+        document.head.appendChild(script);
+        var link = document.createElement('link');
+        link.rel = 'stylesheet';
+        link.href = './app.css?v=' + timestamp;
+        document.head.appendChild(link);
+    </script>
+</head>
+<body>
+    
+    <div id="app">
+    	
+    	<!-- 左侧 -->
+    	<div class="left">
+    		<div class="dhview">
+    
+    			<!-- LOGO -->
+    			<a href="../../../index/" class="index">
+    			    <div class="logo"></div>
+    			</a>
+    
+    			<!-- 导航 -->
+			<ul>
+			    <a href="../../../index/" >
+			    <li class="nav-li">
+			        <i class="icon i-data"></i>
+			        <span class="nav-text">数据</span>
+			    </li>
+			    </a>
+			    
+			    <a href="../../../qun/">
+			    <li class="nav-li">
+			        <i class="icon i-hm"></i>
+			        <span class="nav-text">活码</span>
+			    </li>
+			    </a>
+			    
+				<a href="../../../dwz/">
+				<li class="nav-li">
+				    <i class="icon i-dwz"></i>
+				    <span class="nav-text">短网址</span>
+				</li>
+				</a>
+				
+				<a href="../../../tbk/">
+				<li class="nav-li">
+				    <i class="icon i-tbk"></i>
+				    <span class="nav-text">淘宝客</span>
+				</li>
+				</a>
+				
+				<a href="../../../shareCard/">
+				<li class="nav-li">
+				    <i class="icon i-share"></i>
+				    <span class="nav-text">分享卡片</span>
+				</li>
+				</a>
+				
+				<a href="../../../plugin/" class="selected">
+				<li class="nav-li">
+				    <i class="icon i-plugin-dark"></i>
+				    <span class="nav-text">插件中心</span>
+				</li>
+				</a>
+				
+				<a href="../../../kami/">
+				<li class="nav-li">
+				    <i class="icon i-kami"></i>
+				    <span class="nav-text">卡密分发</span>
+				</li>
+				</a>
+				
+				<a href="../../../config/">
+				<li class="nav-li">
+				    <i class="icon i-config"></i>
+				    <span class="nav-text">配置中心</span>
+				</li>
+				</a>
+				
+				<a href="../../../sucai/">
+				<li class="nav-li">
+				    <i class="icon i-sucai"></i>
+				    <span class="nav-text">素材管理</span>
+				</li>
+				</a>
+				
+				<a href="../../../user/">
+				<li class="nav-li">
+				    <i class="icon i-account"></i>
+				    <span class="nav-text">账号管理</span>
+			    </li>
+			    </a>
+			</ul>
+    
+    			<!-- 账号 -->
+    			<div class="account">加载中...</div>
+    		    
+    		</div>
+    	</div>
+    
+    	<!-- 右侧 -->
+    	<div id="right">
+    	    
+    	    <!--面板标题-->
+    		<h3>
+    		    <a href="./" class="mianbaoxie_a">插件中心</a> ➜ <span class="mbx">微信外链</span> 
+		    </h3>
+		    
+		    <!--数据区域-->
+    		<div class="data-card">
+    		    
+    			<!-- 按钮区域 -->
+    			<div class="button-view" id="button-view" style="display:none;">
+    			    <div class="flex-button-view">
+        			    <div class="button-daohang">
+            			    <a href="../../"><div class="back-lastpage"></div></a>
+        			        <button class="default-btn" style="float:left;">外链管理</button>
+        			        <div class="search-view" style="display:none;">
+        			            <span class="search-span">
+        			                <input class="form-control search-inp" name="keyword" placeholder="jwid / key / 主标题 / 用户名" autocomplete="off" />
+        			            </span>
+        			            <button class="tint-btn search-btn" onclick="searchJw()">查询</button>
+        			        </div>
+        			    </div>
+        			    
+        			    <div class="button-gongneng">
+        			        <button class="tint-btn" 
+            				data-toggle="modal" 
+            				data-target="#createJwModal" 
+            				onclick="getDomainNameList('create')" style="margin-left:5px;">创建外链</button>
+        			    </div>
+    			    </div>
+    			</div>
+    
+    			<!-- 列表区域 -->
+    			<div class="data-list">
+    				<table class="table">
+    				    <thead></thead>
+    				    <tbody></tbody>
+    				</table>
+    			</div>
+    			
+    			<p class="loading" style="display: none;"></p>
+    			
+    			<!-- 分页 -->
+    			<div class="fenye"></div>
+    			
+    		</div><!-- data-card -->
+    	</div><!-- right -->
+    
+    	<!-- 创建链接 -->
+        <div class="modal fade" id="createJwModal">
+            
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    
+                        <!-- 头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">创建外链</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- 表单 -->
+                        <div class="modal-body">
+                            <form id="createJw" enctype="multipart/form-data">
+                            
+                            <div class="border-view">
+                            <span class="text">卡片信息</span>
+                            <div class="inp-view">
+                                <div class="upload-cover">
+                                    <input type="file" id="coverFile" class="coverFile" />
+                                    <span class="upload-icon"> + </span> 
+                                </div>
+                                <div class="inps">
+                                    <div class="inp-group">
+                                        <div class="inp-name">主标题</div>
+                                        <input type="text" name="jw_title" class="form-control" autocomplete="off" placeholder="卡片显示的标题">
+                                    </div>
+                                    <div class="inp-group">
+                                        <div class="inp-name">副标题</div>
+                                        <input type="text" name="jw_beizhu" class="form-control" autocomplete="off" placeholder="副标题、描述文字、备注等" title="如果是抖音卡片，这里就是卡片的第二行小文字">
+                                    </div>
+                                    <div class="inp-group">
+                                        <div class="inp-name">通用落地页</div>
+                                        <select name="jw_common_landpage" class="form-control" title="除了抖音之外就用这个"></select>
+                                    </div>
+                                    <div class="inp-group">
+                                        <div class="inp-name">抖音落地页</div>
+                                        <select name="jw_douyin_landpage" class="form-control" title="抖音专用的无风险落地页"></select>
+                                    </div>
+                                    <div class="inp-group">
+                                        <div class="inp-name">有效期至</div>
+                                        <input type="datetime-local" name="jw_expire_time" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                            </div>
+                            </div>
+                            
+                            <div class="border-view">
+                                <span class="text">投放平台</span>
+                                <div class="platform-container" title="投放平台的选择仅用于决定落地页展示的动态logo"></div>
+                            </div>
+                            
+                            <div class="border-view">
+                            <span class="text">选择跳转的目标</span>
+                            <div class="jumpPlatform-container">
+                                <span class="jumpMiniPro not-selecte" data-tag="urlscheme" title="你自己的小程序选择这个">
+                                    <img src="img/urlscheme.png" />
+                                    <span>自建小程序</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="jdjz">
+                                    <img src="img/jdjz.png" />
+                                    <span>京东京造</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="tencentym">
+                                    <img src="img/tencentym.png" />
+                                    <span>腾讯优码</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="tencentwj">
+                                    <img src="img/tencentwj.png" />
+                                    <span>腾讯问卷</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="caoliaoqrcode">
+                                    <img src="img/caoliaoqrcode.png" />
+                                    <span>草料二维码</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="jinshandoc">
+                                    <img src="img/jinshandoc.png" />
+                                    <span>金山文档</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="tencentdoc">
+                                    <img src="img/tencentdoc.png" />
+                                    <span>腾讯文档</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="zhaopin">
+                                    <img src="img/zhaopin.png" />
+                                    <span>智联招聘</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="qywx">
+                                    <img src="img/qywx.png" />
+                                    <span>企业微信</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="qqgroup">
+                                    <img src="img/qqgroup.png" />
+                                    <span>加入QQ群</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="qqfriend">
+                                    <img src="img/jw_platform_icon_qq.png" />
+                                    <span>加QQ好友</span>
+                                </span>
+                                <span class="jumpMiniPro not-selecte" data-tag="h5page" title="iframe模式">
+                                    <img src="img/h5page.png" />
+                                    <span>h5页面</span>
+                                </span>
+                            </div>
+                            </div>
+                            
+                            <div class="border-view">
+                            <div class="mb-url urlscheme" style="display:none;">
+                                <span class="text bor-l"><b>自建小程序生成URLScheme</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="width:100%;height:70px;margin:-5px auto 10px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">小程序Appid</span>
+                                        <input type="text" name="jw_xcx_appid" class="form-control" placeholder="小程序Appid">
+                                    </div>
+                                    <div style="flex:1;margin-left:20px;">
+                                        <span class="text">小程序AppSecret</span>
+                                        <input type="text" name="jw_xcx_appsecret" class="form-control" placeholder="小程序AppSecret">
+                                    </div>
+                                </div>
+                                
+                                <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">跳转路径</span>
+                                        <input type="text" name="jw_xcx_path" class="form-control" placeholder="pages/xxx/xxx">
+                                    </div>
+                                    <div style="flex:1;margin-left:20px;">
+                                        <span class="text">路径参数</span>
+                                        <input type="text" name="jw_xcx_query" class="form-control" placeholder="id=123&token=456" title="如果你的路径无需传递参数可留空">
+                                    </div>
+                                </div>
+                                <span class="text" style="margin-top:25px;">或粘贴从其它地方创建的URLScheme</span>
+                                <input type="text" name="jw_xcx_urlscheme" class="form-control" autocomplete="off" placeholder="weixin://">
+                            </div>
+                            
+                            <div class="mb-url jdjz" style="display:none;">
+                                <span class="text bor-l"><b>上传或粘贴二维码链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="display:flex;">
+                                    <div style="120px;margin-right:10px;">
+                                        <button type="button" class="default-btn" style="height:36.5px;" onclick="getSuCai('1','createJwModal', 'jdjz_target');">上传二维码</button>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <input type="text" name="jw_jdjz" class="form-control" autocomplete="off" placeholder="粘贴二维码图片链接">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-url tencentym" style="display:none;">
+                                <span class="text bor-l"><b>腾讯优码二维码链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="display:flex;">
+                                    <div style="120px;margin-right:10px;">
+                                        <button type="button" class="default-btn" style="height:36.5px;" onclick="checkTxym()">上传二维码</button>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <input type="text" name="jw_txym" class="form-control" autocomplete="off" placeholder="上传或粘贴腾讯优码二维码链接">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-url tencentwj" style="display:none;">
+                                <span class="text bor-l"><b>兔小巢团队博客链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_txwj" class="form-control" autocomplete="off" placeholder="粘贴博客链接">
+                            </div>
+                            
+                            <div class="mb-url caoliaoqrcode" style="display:none;">
+                                <span class="text bor-l"><b>公众号嵌入链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="display:flex;">
+                                    <div style="120px;margin-right:10px;">
+                                        <button type="button" class="default-btn" style="height:36.5px;" onclick="getCaoliao()">选择链接</button>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <input type="text" name="jw_caoliao" class="form-control" autocomplete="off" placeholder="上传或粘贴公众号嵌入链接">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-url jinshandoc" style="display:none;">
+                                <span class="text bor-l"><b>金山文档</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="display:flex;">
+                                    <div style="120px;margin-right:10px;">
+                                        <button type="button" class="default-btn" style="height:36.5px;" onclick="getJinShan()">选择文件</button>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <input type="text" name="jw_jinshandoc" class="form-control" autocomplete="off" placeholder="填写文件id 或 选择文件后文件id将会自动填写于此">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-url tencentdoc" style="display:none;">
+                                <span class="text bor-l"><b>腾讯文档链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_tencentdoc" class="form-control" autocomplete="off" placeholder="粘贴腾讯文档链接">
+                            </div>
+                            
+                            <div class="mb-url zhaopin" style="display:none;">
+                                <span class="text bor-l"><b>智联招聘图片二维码链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <div style="display:flex;">
+                                    <div style="120px;margin-right:10px;">
+                                        <button type="button" class="default-btn" style="height:36.5px;" onclick="checkZhaoPin()">上传二维码</button>
+                                    </div>
+                                    <div style="flex:1;">
+                                        <input type="text" name="jw_zhaopin" class="form-control" autocomplete="off" placeholder="上传或粘贴智联招聘图片二维码链接">
+                                    </div>
+                                </div>
+                            </div>
+                            
+                            <div class="mb-url qywx" style="display:none;">
+                                <span class="text bor-l"><b>企业微信跳转链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_qywx" class="form-control" autocomplete="off" placeholder="粘贴企业微信跳转链接">
+                            </div>
+                            
+                            <div class="mb-url h5page" style="display:none;">
+                                <span class="text bor-l"><b>h5页面链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_h5page" class="form-control" autocomplete="off" placeholder="粘贴h5页面链接">
+                            </div>
+                            
+                            <div class="mb-url qqgroup" style="display:none;">
+                                <span class="text bor-l"><b>QQ群进群链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_qqgroup" class="form-control" autocomplete="off" placeholder="粘贴QQ群进群链接">
+                            </div>
+                            
+                            <div class="mb-url qqfriend" style="display:none;">
+                                <span class="text bor-l"><b>QQ二维码分享链接</b> <span class="zmt" onclick="zmt()">怎么填？</span></span>
+                                <input type="text" name="jw_qqfriend" class="form-control" autocomplete="off" placeholder="粘贴QQ二维码分享链接">
+                            </div>
+                            
+                            </div>
+                            
+                            <input type="hidden" name="jw_platform" id="selected_platform" value="douyin" />
+                            <input type="hidden" name="selectedTag" id="selected_tag" />
+                            <input type="hidden" name="jw_icon" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                            </form>
+                        </div><!-- modal-body -->
+                        
+                        <!-- 底部操作 -->
+                        <div class="modal-footer">
+                            <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="https://viusosibp88.feishu.cn/docx/TOa4dHdxToi9OWxvcHXcNnxNntf" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="button" class="default-btn" onclick="createJw();">立即创建</button>
+                            </div>
+                        </div>
+                        
+                    </div><!-- modal-footer -->
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- createJwModal -->
+      	
+      	<!-- 编辑链接 -->
+        <div class="modal fade" id="editJwModal">
+            
+            <div class="modal-dialog" style="max-width:700px;">
+                <div class="modal-content">
+                    
+                        <!-- 头部 -->
+                        <div class="modal-header">
+                            <h4 class="modal-title">编辑外链</h4>
+                            <button type="button" class="close" data-dismiss="modal">&times;</button>
+                        </div>
+                        
+                        <!-- 表单 -->
+                        <div class="modal-body">
+                            <form id="editJw" enctype="multipart/form-data">
+                                
+                                <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">主标题</span>
+                                        <input type="text" name="jw_title" class="form-control" autocomplete="off" placeholder="卡片显示的标题">
+                                    </div>
+                                    <div style="flex:1;margin-left:10px;">
+                                        <span class="text">副标题</span>
+                                        <input type="text" name="jw_beizhu" class="form-control" autocomplete="off" placeholder="副标题、描述文字、备注等">
+                                    </div>
+                                </div>
+                            
+                                <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">后台备注信息</span>
+                                        <input type="text" name="jw_beizhu_msg" class="form-control" autocomplete="off" placeholder="仅用于后台展示的备注信息">
+                                    </div>
+                                    <div style="flex:1;margin-left:10px;">
+                                        <span class="text">封面图</span>
+                                        <div class="upload-input">
+                                            <input type="text" name="jw_icon" class="form-control" autocomplete="off" placeholder="粘贴图片链接或上传">
+                                            <span class="input-group-text">
+                                                <input type="file" id="coverFile_edit" class="coverFile_edit" />
+                                                <span class="upload-icon-edit">+ 上传</span>
+                                            </span>
+                                        </div>
+                                    </div>
+                                </div>
+                            
+                                <div style="width:100%;height:70px;margin:-5px auto 20px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">投放平台</span>
+                                        <select name="jw_platform" class="form-control" title="仅用于决定落地页的跳转图标">
+                                            <option value="douyin">抖音</option>
+                                            <option value="kuaishou">快手</option>
+                                            <option value="xhs">小红书</option>
+                                            <option value="qq">QQ</option>
+                                            <option value="sms">短信</option>
+                                            <option value="weibo">微博</option>
+                                            <option value="zhihu">知乎</option>
+                                            <option value="common">通用</option>
+                                        </select>
+                                    </div>
+                                    <div style="flex:1;margin-left:10px;">
+                                        <span class="text">到期时间</span>
+                                        <input type="datetime-local" name="jw_expire_time" class="form-control" autocomplete="off">
+                                    </div>
+                                </div>
+                                
+                                <div class="adminShow" style="display:none;">
+                                <div style="width:100%;height:70px;margin:-5px auto 25px;display:flex;">
+                                    <div style="flex:1;margin-right:7px;">
+                                        <span class="text">最大访问量限制</span>
+                                        <input type="number" min="1.0" name="jw_fwl_limit" class="form-control" autocomplete="off" placeholder="输入一个数值">
+                                    </div>
+                                    <div style="flex:1;margin-left:10px;">
+                                        <span class="text">外链状态</span>
+                                        <select class="form-control" name="jw_status">
+                                            <option value="1">正常</option>
+                                            <option value="2">停用</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                </div>
+                                
+                                <span class="text">通用落地页（配置中心->添加对象存储域名）</span>
+                                <select name="jw_common_landpage" class="form-control"></select>
+                                
+                                <span class="text">抖音落地页（配置中心->添加对象存储域名）</span>
+                                <select name="jw_douyin_landpage" class="form-control"></select>
+                                
+                                <span class="text">目标链接 <a href="javascript:alert('你只能去创建外链，创建成功后，复制目标链接的URLScheme在这里编辑进行保存即可替换，替换完成后删除刚才创建的。')" style="text-decoration:none;color:#ccc;"><span style="float:right;cursor:pointer;">如何重新生成？</span></a></span>
+                                <input type="text" name="jw_url" class="form-control" autocomplete="off" placeholder="要跳转到微信的URLScheme（weixin://dl/...）">
+                                
+                                <!--ID，隐藏域-->
+                                <input type="hidden" name="jw_id">
+                            </form>
+                        </div><!-- modal-body -->
+                        
+                        <!-- 底部操作 -->
+                        <div class="modal-footer">
+                            <div class="footer-btn">
+                            <div class="faqnav" title="阅读使用文档">
+                                <span class="faq">
+                                    <a href="https://viusosibp88.feishu.cn/docx/TOa4dHdxToi9OWxvcHXcNnxNntf" target="_blank">?</a>
+                                </span>
+                            </div>
+                            <div class="btnnav">
+                                <button type="button" class="default-btn" onclick="editJw();">立即保存</button>
+                            </div>
+                        </div>
+                        
+                    </div><!-- modal-footer -->
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- editJwModal -->
+      	
+      	<!-- 确定删除链接 -->
+        <div class="modal fade" id="delJwModal">
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">删除链接</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        将会删除该链接！删除后无法恢复。
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- delJwModal -->
+        
+        <!--金山文档文件列表-->
+        <div class="modal fade" id="jinshanFileModal">
+            
+            <div class="modal-dialog" style="max-width: 700px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">金山文档文件列表</h4>
+                        <button type="button" class="close" onclick="hideSuCaiPannel('createJwModal')">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        <p style="margin-top:10px;padding: 5px 0 0;text-align:center;font-size:14px;" class="files-upload-a">
+                            <a href="https://www.kdocs.cn/?show=all" target="blank">
+                                <button type="button" class="default-btn">上传文件</button>
+                            </a>
+                        </p>
+                        <p style="margin-top:5px;padding: 5px 0 0;text-align:center;font-size:14px;" class="refresh-span">
+                            <span>
+                                <span style="color:#999;">上传后返回这里</span>
+                                <span onclick="refreshJinShanFiles()" style="cursor:pointer;color:#39f;">点击刷新</span>
+                            </span>
+                        </p>
+                        <div class="files"><ul></ul></div>
+                        <div class="setJinShanCookie" style="display:none;">
+                            <h4 style="padding: 15px 0;text-align:center;">授权获取你的金山文档账号文件列表</h4>
+                            <textarea class="form-control" rows="5" placeholder="填写金山文档Cookie" style="width:80%;margin:0 auto;" name="jinshan_cookie"></textarea>
+                            <button type="button" class="default-btn" style="display:block;margin: 20px auto 10px;" onclick="saveCookie('jinshan')">提交并授权</button>
+                            <p style="padding: 10px 0 0;text-align:center;font-size:14px;color:#999;">*通过Cookie即可读取你金山文档账号的所有图片文件。</p>
+                            <p style="padding: 5px 0;text-align:center;font-size:14px;">
+                                <a href="https://viusosibp88.feishu.cn/docx/J3f6d5lS6oXdbvxRmUycsTtBnTb" target="blank">如何获取Cookie?</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- jinshanFileModal -->
+        
+        <!--草料二维码链接-->
+        <div class="modal fade" id="caoliaoModal">
+            
+            <div class="modal-dialog" style="max-width: 700px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">草料二维码</h4>
+                        <button type="button" class="close" onclick="hideSuCaiPannel('createJwModal')">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        <p style="margin-top:10px;padding: 5px 0 0;text-align:center;font-size:14px;" class="files-upload-a">
+                            <a href="https://cli.im/img" target="blank">
+                                <button type="button" class="default-btn">上传文件</button>
+                            </a>
+                        </p>
+                        <p style="margin-top:5px;padding: 5px 0 0;text-align:center;font-size:14px;">
+                            <span class="refresh-span">
+                                <span style="color:#999;">上传后点击 [生成活码] 再返回这里</span>
+                                <span onclick="refreshCaoliao()" style="cursor:pointer;color:#39f;">点击刷新</span>
+                            </span>
+                        </p>
+                        <div class="files"><ul></ul></div>
+                        <div class="setCaoliaoCookie" style="display:none;">
+                            <h4 style="padding: 15px 0;text-align:center;">授权获取你的草料二维码列表</h4>
+                            <textarea class="form-control" rows="5" placeholder="粘贴草料二维码Cookie" style="width:80%;margin:0 auto;" name="caoliao_cookie"></textarea>
+                            <button type="button" class="default-btn" style="display:block;margin: 20px auto 10px;" onclick="saveCookie('caoliao')">提交并授权</button>
+                            <p style="padding: 10px 0 0;text-align:center;font-size:14px;color:#999;">*通过Cookie即可读取你账号的草料二维码列表。</p>
+                            <p style="padding: 5px 0;text-align:center;font-size:14px;">
+                                <a href="https://viusosibp88.feishu.cn/docx/J3f6d5lS6oXdbvxRmUycsTtBnTb" target="blank">如何获取Cookie?</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- cailiaoModal -->
+        
+        <!--腾讯优码Cookie授权-->
+        <div class="modal fade" id="txymCookieModal">
+            
+            <div class="modal-dialog" style="max-width: 700px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">腾讯优码Cookie授权</h4>
+                        <button type="button" class="close" onclick="hideSuCaiPannel('createJwModal')">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        <div class="setCaoliaoCookie">
+                            <h4 style="padding: 15px 0;text-align:center;">授权Cookie进行创建腾讯优码链接</h4>
+                            <textarea class="form-control" rows="5" placeholder="粘贴腾讯优码Cookie" style="width:80%;margin:0 auto;" name="txym_cookie" onclick="hideModal('createJwModal')"></textarea>
+                            <button type="button" class="default-btn" style="display:block;margin: 20px auto 10px;" onclick="saveCookie('txym')">提交并授权</button>
+                            <p style="padding: 10px 0 0;text-align:center;font-size:14px;color:#999;">*通过Cookie即可一键生成腾讯优码链接。</p>
+                            <p style="padding: 5px 0;text-align:center;font-size:14px;">
+                                <a href="https://viusosibp88.feishu.cn/docx/J3f6d5lS6oXdbvxRmUycsTtBnTb" target="blank">如何获取Cookie?</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- txymCookieModal -->
+        
+        <!--智联招聘Cookie授权-->
+        <div class="modal fade" id="zhaopinCookieModal">
+            
+            <div class="modal-dialog" style="max-width: 700px;">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">智联招聘Cookie授权</h4>
+                        <button type="button" class="close" onclick="hideSuCaiPannel('createJwModal')">&times;</button>
+                    </div>
+                    
+                    <!-- 内容 -->
+                    <div class="modal-body">
+                        <div class="setCaoliaoCookie">
+                            <h4 style="padding: 15px 0;text-align:center;">授权Cookie进行上传智联招聘图片链接</h4>
+                            <textarea class="form-control" rows="5" placeholder="粘贴智联招聘Cookie" style="width:80%;margin:0 auto;" name="zhaopin_cookie" onclick="hideModal('createJwModal')"></textarea>
+                            <button type="button" class="default-btn" style="display:block;margin: 20px auto 10px;" onclick="saveCookie('zhaopin')">提交并授权</button>
+                            <p style="padding: 10px 0 0;text-align:center;font-size:14px;color:#999;">*通过Cookie即可生成智联招聘图片链接。</p>
+                            <p style="padding: 5px 0;text-align:center;font-size:14px;">
+                                <a href="https://viusosibp88.feishu.cn/docx/J3f6d5lS6oXdbvxRmUycsTtBnTb" target="blank">如何获取Cookie?</a>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- zhaopinCookieModal -->
+        
+        <!-- 分享链接 -->
+        <div class="modal fade" id="ShareJwModal">
+            
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header">
+                        <h4 class="modal-title">分享链接</h4>
+                        <button type="button" class="close" data-dismiss="modal">&times;</button>
+                    </div>
+                    
+                    <!-- 表单 -->
+                    <div class="modal-body">
+                        <div class="box">
+                            
+                            <!--二维码类型切换-->
+                            <div class="wrapper">
+                                <div class="qrcode-toggle">
+                                    <button class="active" data-qrtype="1">抖音</button>
+                                    <button data-qrtype="2">通用</button>
+                                </div>
+                            </div>
+                            
+                            <!--落地页链接-->
+                            <div id="qrURL" class="landpageURL"></div>
+                            
+                            <!--二维码区域-->
+                            <div class="Qrcode" id="shareQrcode"></div>
+                            
+                            <!--扫码提示-->
+                            <p style="text-align:center;font-size:15px;color:#999;" id="scan-tips"></p>
+                        </div>
+                    </div><!-- modal-body -->
+                    
+                    <!-- 底部操作 -->
+                    <div class="modal-footer"></div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div><!-- modal-content -->
+            </div><!-- modal-dialog -->
+        </div><!-- ShareJwModal -->
+        
+        <!--素材库-->
+        <div class="modal fade" id="suCaiKu">
+            <div class="modal-dialog modal-lg">
+                <div class="modal-content">
+                    
+                    <!-- 头部 -->
+                    <div class="modal-header" title="点击右上角&times;可返回二维码列表">
+                        <h4 class="modal-title">素材库</h4>
+                        <span class="hideSuCaiPannel_closeIcon"></span>
+                    </div>
+                    
+                    <!-- 模态框主体 -->
+                    <div class="modal-body">
+                        <div class="sucai-upload">
+                            <button type="button" class="default-btn upload_sucai_button">
+                                <span>上传素材</span>
+                                <form id="uploadTosuCaiKuForm" enctype="multipart/form-data">
+                                    <input type="file" name="file" class="upload_sucai" accept="image/*" id="uploadTosuCaiKu" />
+                                    <input text="text" name="upload_sucai_fromPannel" style="display:none;" />
+                                    <input text="text" name="upload_sucai_toInp" style="display:none;" />
+                                </form>
+                            </button>
+                        </div>
+                        
+                        <!--素材容器-->
+                        <div class="sucai-view"></div>
+                        
+                        <!--分页-->
+                        <div class="fenye"></div>
+                    </div>
+                    
+                    <!-- 模态框底部 -->
+                    <div class="modal-footer">
+                        <div class="footer-btn">
+                        	<div class="faqnav" title="阅读使用文档">
+                        	    <span class="faq"><a href="https://viusosibp88.feishu.cn/docx/TOa4dHdxToi9OWxvcHXcNnxNntf" target="_blank">?</a></span>
+                        	</div>
+                        	<div class="btnnav">
+                        	    <button type="button" class="default-btn" data-dismiss="modal" onclick="hideSuCaiPannel()">取消</button>
+                        	</div>
+                        </div>
+                    </div>
+                    
+                    <!-- 操作反馈 -->
+                    <div class="result"></div>
+                    
+                </div>
+            </div>
+        </div><!-- suCaiKu -->
+        
+        <!-- 全局信息提示框 -->
+        <div id="notification">
+            <div id="notification-text"></div>
+        </div>
+        <div class="message-container" id="messageContainer"></div>
+    
+    </div><!-- app -->
+    
+    <script>
+        
+        // 选择跳转的目标
+        $(document).ready(function () {
+            let secondTag = $(".jumpMiniPro").eq(4); // 默认选中第五项（01234）
+            secondTag.addClass("selected").removeClass("not-selecte");
+            $("."+secondTag.attr("data-tag")).css("display","block");
+            $("input[name='selectedTag']").val(secondTag.attr("data-tag"));
+            let secondTagValue = secondTag.attr("data-tag");
+            $(".content-section").hide();
+            $("#" + secondTagValue).show();
+            $(".jumpMiniPro").click(function () {
+                $(".jumpMiniPro").removeClass("selected").addClass("not-selecte");
+                $(this).addClass("selected").removeClass("not-selecte");
+                let selectedTag = $(this).attr("data-tag");
+                $("input[name='selectedTag']").val(selectedTag);
+                $(".mb-url").css("display","none");
+                $("."+selectedTag).css("display","block");
+            });
+        });
+        
+        // 上传至素材库
+        $("#uploadTosuCaiKu").change(function(e){
+            
+            // 获取选择的文件
+            var fileSelect = e.target.files;
+            if(fileSelect.length>0){
+                
+                // file表单数据
+                var imageData = new FormData(document.getElementById("uploadTosuCaiKuForm"));
+                
+                // 获取 fromPannel
+                var fromPannel = $('#suCaiKu input[name="upload_sucai_fromPannel"]').val();
+                
+                // 获取 toInp
+                var toInp = $('#suCaiKu input[name="upload_sucai_toInp"]').val();
+                
+                // 异步上传
+                $.ajax({
+                    url:"../../../public/uploadToSuCaiKu.php",
+                    type:"POST",
+                    data:imageData,
+                    cache: false,
+                    processData: false,
+                    contentType: false,
+                    success: function(res) {
+                        
+                        if(res.code == 200){
+                            
+                            // 上传成功
+                            // 重新获取素材列表
+                            getSuCai(1,fromPannel,toInp);
+                        }else{
+                            
+                            // 上传失败
+                            showErrorResult(res.msg)
+                        }
+                        
+                        // 清空file控件的选择
+                        $('#uploadTosuCaiKu').val('');
+                    },
+                    error: function() {
+                        
+                        // 上传失败
+                        alert('上传至素材库失败！')
+                    }
+                })
+            }
+        })
+        
+        // 二维码类型切换
+        const buttons = document.querySelectorAll('.qrcode-toggle button');
+        
+        buttons.forEach(button => {
+            button.addEventListener('click', () => {
+                buttons.forEach(btn => btn.classList.remove('active'));
+                button.classList.add('active');
+                const jwid = button.getAttribute('data-jwid');
+                const qrtype = button.getAttribute('data-qrtype');
+                shareJw(jwid, qrtype);
+            });
+        });
+    </script>
+    
+    <!--上传图片到外部图床-->
+    <script>
+        document.getElementById('coverFile').addEventListener('change', () => {
+            const coverFile = document.getElementById('coverFile');
+            if (!coverFile.files.length) {
+                alert('请选择图片');
+                return;
+            }
+        
+            const file = coverFile.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+        
+            fetch('server/uploadCover.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                const imgUrl = data.data.url;
+                const cover = document.querySelector('.upload-cover');
+                document.querySelector('.upload-icon').innerHTML = '';
+                cover.style.background = `url("${imgUrl}") center / 100% no-repeat`;
+                $('input[name="jw_icon"]').val(imgUrl);
+            })
+            .catch(err => {
+                document.getElementById('result').innerText = '上传失败: ' + err;
+            });
+        });
+        
+        document.getElementById('coverFile_edit').addEventListener('change', () => {
+            const coverFile_edit = document.getElementById('coverFile_edit');
+            if (!coverFile_edit.files.length) {
+                alert('请选择图片');
+                return;
+            }
+        
+            const file = coverFile_edit.files[0];
+            const formData = new FormData();
+            formData.append('file', file);
+        
+            fetch('server/uploadCover.php', {
+                method: 'POST',
+                body: formData
+            })
+            .then(res => res.json())
+            .then(data => {
+                const imgUrl = data.data.url;
+                $('input[name="jw_icon"]').val(imgUrl);
+                $('.upload-icon-edit').text('+ 重传');
+                showSuccessResult('已上传');
+            })
+            .catch(err => {
+                document.getElementById('result').innerText = '上传失败: ' + err;
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,11 @@
+{
+  "name": "二维码生成器",
+  "version": "1.0.0",
+  "description": "快速生成各种样式的二维码，支持自定义颜色、Logo、边框等",
+  "author": "TANKING",
+  "pluginId": "qrcodeGenerator",
+  "icon": "img/logo.png",
+  "permissions": [],
+  "isSystem": 0,
+  "state": 1
+}

@@ -1,0 +1,81 @@
+=====================================
+私域引流宝 v2.4.6 部署指南
+=====================================
+
+【文件结构】
+liuyinbao_v2.4.6_files.tar.gz  - 项目源码
+安装说明.txt                   - 本文件
+
+【环境要求】
+- PHP 7.4+ 或 8.0+
+- MySQL 5.7+ 或 MariaDB 10.2+
+- Nginx 或 Apache
+- PDO扩展
+- OpenSSL扩展
+
+【部署步骤】
+
+1. 上传文件
+   解压 liuyinbao_v2.4.6_files.tar.gz 到网站根目录
+   例: /var/www/liuyinbao/
+
+2. 导入数据库
+   mysql -u用户名 -p数据库名 < liuyinbao_v2.4.6_database.sql
+
+3. 配置数据库连接
+   编辑 console/Db.php 修改数据库配置:
+   - db_host: 数据库地址
+   - db_name: 数据库名称
+   - db_user: 数据库用户名
+   - db_pass: 数据库密码
+
+4. 设置目录权限
+   chmod -R 755 /var/www/liuyinbao
+   chmod -R 777 /var/www/liuyinbao/static/upload
+
+5. 配置伪静态
+
+   Nginx配置示例:
+   location / {
+       if (!-e $request_filename){
+           rewrite ^(.*)$ /index.php?s=$1 last;
+           break;
+       }
+   }
+   
+   Apache (.htaccess):
+   <IfModule mod_rewrite.c>
+   RewriteEngine On
+   RewriteCond %{REQUEST_FILENAME} !-f
+   RewriteCond %{REQUEST_FILENAME} !-d
+   RewriteRule ^(.*)$ index.php?s=$1 [L]
+   </IfModule>
+
+6. 访问后台
+   http://你的域名/console/index/
+   默认管理员账号密码在安装时设置
+
+7. 删除安装目录（安装完成后）
+   rm -rf /var/www/liuyinbao/删install
+
+【安全建议】
+1. 修改数据库密码
+2. 修改后台登录密码
+3. 配置SSL证书使用HTTPS
+4. 定期备份数据库
+
+【版本信息】
+- 系统版本: 2.4.6
+- 已安装插件:
+  * FrameProxy - 框架代理
+  * domainCheckTask - 域名检测任务
+  * h5chatPages - H5聊天页面
+  * jumpWX - 微信外链/抖音卡片
+  * pluginSDK - 插件SDK
+  * qrcodeGenerator - 二维码生成器
+  * visitorStats - 访客画像
+
+【技术支持】
+有问题请提交Issue或联系开发者
+
+=====================================

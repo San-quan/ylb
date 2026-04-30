@@ -1,0 +1,11 @@
+{
+    "name": "域名检测任务",
+    "desc": "定时检测域名在微信的封禁状态",
+    "logo": "img/logo.png",
+    "entry": "domainCheckTask",
+    "version": "1.2.0",
+    "author": "liKeYunKeji",
+    "website": "",
+    "install": 1,
+    "allow": false
+}
